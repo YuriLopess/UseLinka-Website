@@ -1,14 +1,18 @@
 import React from 'react'
-import { Container, Wordmark } from './Atoms'
+import { Container, Wordmark, useBreakpoint } from './Atoms'
 
 export default function Footer() {
+  const bp = useBreakpoint()
+  const isMobile = bp === 'mobile'
+  const isTablet = bp === 'tablet'
+  const cols = isMobile ? '1fr 1fr' : isTablet ? '1fr 1fr 1fr' : '1.4fr 1fr 1fr 1fr'
   return (
-    <footer style={{ padding: '80px 0 32px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
+    <footer style={{ padding: isMobile ? '48px 0 24px' : '80px 0 32px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
       <Container>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 40, paddingBottom: 70, borderBottom: '1px solid var(--line)' }}>
-          <div>
-            <Wordmark accent="var(--accent)" />
-            <p style={{ color: 'var(--ink-2)', lineHeight: 1.5, marginTop: 18, maxWidth: 300, fontSize: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: cols, gap: isMobile ? 28 : 40, paddingBottom: isMobile ? 48 : 70, borderBottom: '1px solid var(--line)' }}>
+          <div style={{ gridColumn: isMobile ? '1 / -1' : isTablet ? '1 / -1' : 'auto' }}>
+            <Wordmark accent="var(--accent)" height={isMobile ? 36 : 42} />
+            <p style={{ color: 'var(--ink-2)', lineHeight: 1.5, marginTop: 18, maxWidth: 360, fontSize: 14 }}>
               Tecnologia, design e processos para empresas que querem crescer sem virar refém da própria operação.
             </p>
             <div className="mono" style={{ marginTop: 24, fontSize: 11, color: 'var(--ink-3)', textTransform: 'uppercase' }}>
@@ -28,10 +32,10 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div className="light" style={{ fontSize: 'clamp(120px, 22vw, 320px)', lineHeight: 0.85, letterSpacing: '-0.06em', margin: '40px 0 24px', color: 'var(--ink)', textAlign: 'center' }}>
+        <div className="light" style={{ fontSize: 'clamp(96px, 22vw, 320px)', lineHeight: 0.85, letterSpacing: '-0.06em', margin: isMobile ? '32px 0 16px' : '40px 0 24px', color: 'var(--ink)', textAlign: 'center' }}>
           linka<span style={{ color: 'var(--accent)' }}>.</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 24, flexWrap: 'wrap', gap: 14 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 24, flexWrap: 'wrap', gap: 14, textAlign: isMobile ? 'center' : 'left' }}>
           <span className="mono" style={{ fontSize: 11, color: 'var(--ink-3)', textTransform: 'uppercase' }}>© 2026 Linka · CNPJ 00.000.000/0001-00</span>
           <span className="mono" style={{ fontSize: 11, color: 'var(--ink-3)', textTransform: 'uppercase' }}>Feito com cuidado em São Paulo</span>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Container, CTA, ArrowRight, Reveal } from './Atoms'
+import { Container, CTA, ArrowRight, Reveal, useBreakpoint } from './Atoms'
 
 function ChatbotDemo() {
   const script = [
@@ -198,56 +198,66 @@ export default function DarkSection() {
   ]
   const [active, setActive] = useState('chatbot')
   const current = tabs.find(t => t.key === active)
+  const bp = useBreakpoint()
+  const isMobile = bp === 'mobile'
+  const isTablet = bp === 'tablet'
+  const isStacked = isMobile || isTablet
+
+  const stats = [
+    { target: 50, prefix: '+', suffix: '',   decimals: 0, l: 'empresas atendidas' },
+    { target: 7,  prefix: '',  suffix: 'd',  decimals: 0, l: 'setup médio' },
+    { target: 1.4,prefix: '', suffix: 's',  decimals: 1, l: 'tempo médio de site' },
+    { target: 24, prefix: '', suffix: '/7',  decimals: 0, l: 'atendimento via IA' },
+  ]
+  const statCols = isMobile ? 2 : 4
 
   return (
-    <section style={{ background: 'var(--dark)', color: '#fff', padding: '120px 0', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ background: 'var(--dark)', color: '#fff', padding: isMobile ? '72px 0' : '120px 0', position: 'relative', overflow: 'hidden' }}>
       <Container>
         <Reveal>
-          <div className="mono" style={{ fontSize: 12, textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: 30 }}>03 — Plataforma</div>
+          <div className="mono" style={{ fontSize: 12, textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginBottom: isMobile ? 20 : 30 }}>03 — Plataforma</div>
         </Reveal>
         <Reveal>
-          <h2 style={{ fontSize: 'clamp(40px, 5.4vw, 72px)', lineHeight: 0.98, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 60px', maxWidth: 900 }}>
+          <h2 style={{ fontSize: 'clamp(32px, 5.4vw, 72px)', lineHeight: 1, letterSpacing: '-0.03em', fontWeight: 500, margin: isMobile ? '0 0 36px' : '0 0 60px', maxWidth: 900 }}>
             Tudo o que sua empresa<br />precisa, <span className="light" style={{ color: 'var(--accent)' }}>num só lugar.</span>
           </h2>
         </Reveal>
-        <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: 60, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isStacked ? '1fr' : '380px 1fr', gap: isMobile ? 24 : isTablet ? 32 : 60, alignItems: 'start' }}>
           <Reveal>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {tabs.map(t => (
-                <button key={t.key} onClick={() => setActive(t.key)} style={{ textAlign: 'left', background: active === t.key ? 'var(--dark-3)' : 'transparent', border: '1px solid ' + (active === t.key ? 'rgba(255,255,255,.12)' : 'transparent'), color: '#fff', padding: '20px 22px', borderRadius: 16, cursor: 'pointer', transition: 'background .3s ease' }}>
+                <button key={t.key} onClick={() => setActive(t.key)} style={{ textAlign: 'left', background: active === t.key ? 'var(--dark-3)' : 'transparent', border: '1px solid ' + (active === t.key ? 'rgba(255,255,255,.12)' : 'transparent'), color: '#fff', padding: isMobile ? '16px 18px' : '20px 22px', borderRadius: 16, cursor: 'pointer', transition: 'background .3s ease' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: active === t.key ? 10 : 0 }}>
-                    <span style={{ fontSize: 17, fontWeight: 500 }}>{t.title}</span>
+                    <span style={{ fontSize: isMobile ? 16 : 17, fontWeight: 500 }}>{t.title}</span>
                     <span className="mono" style={{ fontSize: 11, color: 'rgba(255,255,255,.4)' }}>0{tabs.findIndex(x => x.key === t.key) + 1}</span>
                   </div>
                   {active === t.key && <div style={{ color: 'rgba(255,255,255,.6)', fontSize: 14, lineHeight: 1.5 }}>{t.body}</div>}
                 </button>
               ))}
-              <div style={{ marginTop: 30, display: 'flex', gap: 14 }}>
+              <div style={{ marginTop: isMobile ? 18 : 30, display: 'flex', gap: 14 }}>
                 <CTA kind="accent" size="md">Solicitar demo</CTA>
               </div>
             </div>
           </Reveal>
           <Reveal delay={150}>
-            <div style={{ background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 24, padding: 28, minHeight: 480, position: 'relative' }}>
+            <div style={{ background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,.08)', borderRadius: isMobile ? 18 : 24, padding: isMobile ? 18 : 28, minHeight: isMobile ? 380 : 480, position: 'relative' }}>
               {current.preview}
             </div>
           </Reveal>
         </div>
         <Reveal delay={200}>
-          <div style={{ marginTop: 80, padding: '40px 0', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid rgba(255,255,255,.1)', borderBottom: '1px solid rgba(255,255,255,.1)' }}>
-            {[
-              { target: 50, prefix: '+', suffix: '',   decimals: 0, l: 'empresas atendidas' },
-              { target: 7,  prefix: '',  suffix: 'd',  decimals: 0, l: 'setup médio' },
-              { target: 1.4,prefix: '', suffix: 's',  decimals: 1, l: 'tempo médio de site' },
-              { target: 24, prefix: '', suffix: '/7',  decimals: 0, l: 'atendimento via IA' },
-            ].map((s, i) => (
-              <div key={i} style={{ padding: '0 28px', borderRight: i < 3 ? '1px solid rgba(255,255,255,.1)' : 'none' }}>
-                <div style={{ fontSize: 'clamp(36px,3.4vw,52px)', letterSpacing: '-0.03em', fontWeight: 500, lineHeight: 1 }}>
-                  <CountUp target={s.target} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals} />
+          <div style={{ marginTop: isMobile ? 48 : 80, padding: isMobile ? '24px 0' : '40px 0', display: 'grid', gridTemplateColumns: `repeat(${statCols}, 1fr)`, gap: isMobile ? '24px 0' : 0, borderTop: '1px solid rgba(255,255,255,.1)', borderBottom: '1px solid rgba(255,255,255,.1)' }}>
+            {stats.map((s, i) => {
+              const isLastCol = (i + 1) % statCols === 0
+              return (
+                <div key={i} style={{ padding: isMobile ? '0 16px' : '0 28px', borderRight: !isLastCol ? '1px solid rgba(255,255,255,.1)' : 'none' }}>
+                  <div style={{ fontSize: 'clamp(30px,3.4vw,52px)', letterSpacing: '-0.03em', fontWeight: 500, lineHeight: 1 }}>
+                    <CountUp target={s.target} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals} />
+                  </div>
+                  <div className="mono" style={{ fontSize: 11, textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginTop: 10 }}>{s.l}</div>
                 </div>
-                <div className="mono" style={{ fontSize: 11, textTransform: 'uppercase', color: 'rgba(255,255,255,.45)', marginTop: 10 }}>{s.l}</div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </Reveal>
       </Container>

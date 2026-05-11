@@ -98,6 +98,10 @@ button { font-family: inherit; }
 /* marquee */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-track { display: flex; gap: 64px; width: max-content; animation: marquee 38s linear infinite; }
+@media (max-width: 640px) {
+  .marquee-track { gap: 40px; animation-duration: 28s; }
+  .ticker { gap: 36px !important; animation-duration: 40s !important; }
+}
 
 /* blink */
 @keyframes blink { 50% { opacity: 0; } }
@@ -117,6 +121,15 @@ button { font-family: inherit; }
 
 /* dot grid */
 .dotgrid { background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--ink) 12%, transparent) 1px, transparent 1px); background-size: 24px 24px; }
+@media (max-width: 640px) {
+  .dotgrid { background-size: 18px 18px; }
+}
+
+/* respeita prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .ticker { animation: none !important; }
+  .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
 
 /* hero entry */
 @keyframes heroIn { from { opacity: 0; filter: blur(12px); transform: translateY(12px); } to { opacity: 1; filter: blur(0); transform: none; } }

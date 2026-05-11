@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, ArrowRight } from './Atoms'
+import { Container, ArrowRight, useBreakpoint } from './Atoms'
 
 const logos = [
   { name: 'Vortex', type: 'mark' },
@@ -32,8 +32,11 @@ function Logo({ name, type }) {
 }
 
 export default function LogosMarquee() {
+  const bp = useBreakpoint()
+  const cols = bp === 'mobile' ? 2 : bp === 'tablet' ? 4 : 4
+  const gap = bp === 'mobile' ? '36px 24px' : '56px 64px'
   return (
-    <section style={{ padding: '40px 0 100px' }}>
+    <section style={{ padding: bp === 'mobile' ? '24px 0 64px' : '40px 0 100px' }}>
       <Container>
         <div className="grp" style={{ position: 'relative' }}>
           <div className="grp-overlay" style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'scale(.95)', opacity: 0, transition: 'opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1)', pointerEvents: 'none' }}>
@@ -41,10 +44,10 @@ export default function LogosMarquee() {
               Conheça nossos clientes <ArrowRight size={12} />
             </a>
           </div>
-          <div className="grp-target mono" style={{ textAlign: 'center', marginBottom: 36, fontSize: 11, textTransform: 'uppercase', color: 'var(--ink-3)', transition: 'all .5s ease' }}>
+          <div className="grp-target mono" style={{ textAlign: 'center', marginBottom: bp === 'mobile' ? 24 : 36, fontSize: 11, textTransform: 'uppercase', color: 'var(--ink-3)', transition: 'all .5s ease', padding: '0 12px' }}>
             ↳ Empresas que cresceram com a Linka
           </div>
-          <div className="grp-target" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '56px 64px', maxWidth: 780, margin: '0 auto', transition: 'all .5s ease' }}>
+          <div className="grp-target" style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap, maxWidth: 780, margin: '0 auto', transition: 'all .5s ease' }}>
             {logos.map((l, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Logo {...l} />

@@ -1,11 +1,13 @@
 import React from 'react'
-import { Container, CTA, ArrowRight, Reveal } from './Atoms'
+import { Container, CTA, ArrowRight, Reveal, useBreakpoint } from './Atoms'
 import { LinkaMark } from './Atoms'
 
 export default function Hero() {
+  const bp = useBreakpoint()
+  const isMobile = bp === 'mobile'
   const step = i => ({ className: 'hero-in', style: { animationDelay: `${i * 120}ms` } })
   return (
-    <section style={{ padding: '120px 0 60px', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: isMobile ? '96px 0 40px' : '120px 0 60px', position: 'relative', overflow: 'hidden' }}>
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.7 }}>
         <div style={{ position: 'absolute', left: '-20%', top: -200, width: '42rem', height: '80rem', transform: 'rotate(-35deg)', borderRadius: '50%', background: 'radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--ink) 6%, transparent) 0, color-mix(in oklab, var(--ink) 2%, transparent) 50%, transparent 80%)' }} />
         <div style={{ position: 'absolute', right: '-15%', top: 200, width: '34rem', height: '60rem', transform: 'rotate(30deg)', borderRadius: '50%', background: 'radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--accent) 12%, transparent) 0, transparent 70%)' }} />
@@ -19,8 +21,8 @@ export default function Hero() {
               ...step(0).style,
               margin: '0 auto',
               maxWidth: 1000,
-              fontSize: 'clamp(48px, 7vw, 100px)',
-              lineHeight: 0.95,
+              fontSize: 'clamp(36px, 7vw, 100px)',
+              lineHeight: 0.98,
               letterSpacing: '-0.04em',
               fontWeight: 500,
               textWrap: 'balance',
@@ -35,9 +37,10 @@ export default function Hero() {
             {...step(1)}
             style={{
               ...step(1).style,
-              margin: '32px auto 0',
+              margin: isMobile ? '24px auto 0' : '32px auto 0',
               maxWidth: 620,
-              fontSize: 'clamp(17px,1.3vw,20px)',
+              padding: isMobile ? '0 4px' : 0,
+              fontSize: 'clamp(15px,1.3vw,20px)',
               lineHeight: 1.5,
               color: 'var(--ink-2)',
               textWrap: 'balance',
@@ -51,7 +54,7 @@ export default function Hero() {
             {...step(2)}
             style={{
               ...step(2).style,
-              marginTop: 44,
+              marginTop: isMobile ? 32 : 44,
               display: 'flex',
               gap: 10,
               justifyContent: 'center',
@@ -63,7 +66,7 @@ export default function Hero() {
               <CTA size="md" kind="dark" hoverAccent style={{ borderRadius: 12 }}>Começar agora</CTA>
             </div>
             <button
-              style={{ background: 'transparent', border: 'none', padding: '14px 22px', borderRadius: 12, color: 'var(--ink)', fontSize: 16, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'inherit' }}
+              style={{ background: 'transparent', border: 'none', padding: isMobile ? '12px 18px' : '14px 22px', borderRadius: 12, color: 'var(--ink)', fontSize: isMobile ? 15 : 16, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'inherit' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-2)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >
@@ -72,55 +75,65 @@ export default function Hero() {
           </div>
         </div>
 
-        <div {...step(3)} style={{ ...step(3).style, marginTop: 80, position: 'relative' }}>
+        <div {...step(3)} style={{ ...step(3).style, marginTop: isMobile ? 56 : 80, position: 'relative' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, transparent 35%, var(--bg) 100%)', zIndex: 5, pointerEvents: 'none' }} />
-          <IPhoneShowcase />
+          <IPhoneShowcase bp={bp} />
         </div>
       </Container>
     </section>
   )
 }
 
-function IPhoneShowcase() {
+function IPhoneShowcase({ bp }) {
+  const isMobile = bp === 'mobile'
+  const isTablet = bp === 'tablet'
+  // Em mobile, escondemos os cards flutuantes; em tablet, aproximamos do iPhone
+  const cardLeft = isTablet ? 'calc(50% - 280px)' : 'calc(50% - 360px)'
+  const cardRight = isTablet ? 'calc(50% - 300px)' : 'calc(50% - 380px)'
+  const cardWidth = isTablet ? 240 : 280
   return (
-    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px 0 0', minHeight: 680 }}>
-      <div style={{ position: 'absolute', left: 'calc(50% - 360px)', top: 60, width: 280, background: 'var(--card)', borderRadius: 16, padding: 18, border: '1px solid var(--line)', boxShadow: '0 24px 50px -22px rgba(0,0,0,.18)', zIndex: 1 }}>
-        <div className="mono" style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', marginBottom: 10 }}>↳ painel · hoje</div>
-        <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 14 }}>Leads gerados</div>
-        <div style={{ display: 'flex', alignItems: 'end', gap: 6, height: 60 }}>
-          {[40, 72, 55, 90, 48, 108, 75].map((h, i) => (
-            <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 3, background: i === 5 ? 'var(--accent)' : i === 3 ? 'var(--ink)' : 'var(--bg-2)' }} />
-          ))}
+    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px 0 0', minHeight: isMobile ? 560 : 680 }}>
+      {!isMobile && (
+        <div style={{ position: 'absolute', left: cardLeft, top: 60, width: cardWidth, background: 'var(--card)', borderRadius: 16, padding: 18, border: '1px solid var(--line)', boxShadow: '0 24px 50px -22px rgba(0,0,0,.18)', zIndex: 1 }}>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', marginBottom: 10 }}>↳ painel · hoje</div>
+          <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 14 }}>Leads gerados</div>
+          <div style={{ display: 'flex', alignItems: 'end', gap: 6, height: 60 }}>
+            {[40, 72, 55, 90, 48, 108, 75].map((h, i) => (
+              <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 3, background: i === 5 ? 'var(--accent)' : i === 3 ? 'var(--ink)' : 'var(--bg-2)' }} />
+            ))}
+          </div>
+          <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em' }}>+128</div>
+            <div className="mono" style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase' }}>↑ 32%</div>
+          </div>
         </div>
-        <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-          <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em' }}>+128</div>
-          <div className="mono" style={{ fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase' }}>↑ 32%</div>
-        </div>
-      </div>
+      )}
 
-      <div style={{ position: 'absolute', right: 'calc(50% - 380px)', top: 140, width: 280, background: '#0a0a0a', color: '#fff', borderRadius: 16, padding: 18, boxShadow: '0 24px 50px -22px rgba(0,0,0,.28)', zIndex: 1 }}>
-        <div className="mono" style={{ fontSize: 10, color: 'rgba(255,255,255,.5)', textTransform: 'uppercase', marginBottom: 10 }}>↳ atendimento ia</div>
-        <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6 }}>247 clientes hoje</div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)', lineHeight: 1.4, marginBottom: 14 }}>
-          Tempo médio de resposta &lt; 3s · 24/7
+      {!isMobile && (
+        <div style={{ position: 'absolute', right: cardRight, top: 140, width: cardWidth, background: '#0a0a0a', color: '#fff', borderRadius: 16, padding: 18, boxShadow: '0 24px 50px -22px rgba(0,0,0,.28)', zIndex: 1 }}>
+          <div className="mono" style={{ fontSize: 10, color: 'rgba(255,255,255,.5)', textTransform: 'uppercase', marginBottom: 10 }}>↳ atendimento ia</div>
+          <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6 }}>247 clientes hoje</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)', lineHeight: 1.4, marginBottom: 14 }}>
+            Tempo médio de resposta &lt; 3s · 24/7
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {['WhatsApp', 'Site', 'Instagram'].map(t => (
+              <span key={t} style={{ padding: '4px 10px', borderRadius: 999, fontSize: 11, background: 'rgba(255,255,255,.08)', color: '#fff' }}>{t}</span>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {['WhatsApp', 'Site', 'Instagram'].map(t => (
-            <span key={t} style={{ padding: '4px 10px', borderRadius: 999, fontSize: 11, background: 'rgba(255,255,255,.08)', color: '#fff' }}>{t}</span>
-          ))}
-        </div>
-      </div>
+      )}
 
-      <IPhone />
+      <IPhone scale={isMobile ? 0.82 : isTablet ? 0.92 : 1} />
     </div>
   )
 }
 
-function IPhone() {
+function IPhone({ scale = 1 }) {
   const W = 320, H = 660, bezel = 11, radius = 48
   const islandW = 110, islandH = 32
   return (
-    <div style={{ position: 'relative', zIndex: 2 }}>
+    <div style={{ position: 'relative', zIndex: 2, transform: scale !== 1 ? `scale(${scale})` : 'none', transformOrigin: 'center top' }}>
       <div style={{ width: W + bezel * 2, height: H + bezel * 2, borderRadius: radius + bezel, padding: bezel, background: 'linear-gradient(135deg, #2a2c30 0%, #1c1e22 40%, #0c0d0f 100%)', boxShadow: 'none', position: 'relative', boxSizing: 'border-box' }}>
         <div style={{ width: '100%', height: '100%', borderRadius: radius, background: '#0a0a0a', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.04), inset 0 10px 20px rgba(0,0,0,.35)' }}>
           <div style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', width: islandW, height: islandH, borderRadius: 18, background: '#000', zIndex: 5 }} />
